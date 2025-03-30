@@ -23,6 +23,9 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import RegisterDialog from "./register_dialog";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/user";
+import { AuthApiFactory, Configuration } from "@/api";
+import { API_HOST_BASEPATH } from "../topbar/topbar";
 
 interface Props {
   isOpen: boolean;
@@ -50,6 +53,7 @@ const FormSchema = z.object({
 
 const LoginDialog: React.FC<Props> = ({ isOpen, setOpen }) => {
   const [isOpenRegisterDialog, setOpenRegisterDialog] = useState(false);
+  const { setAuth } = useAuthStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,8 +64,27 @@ const LoginDialog: React.FC<Props> = ({ isOpen, setOpen }) => {
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    toast("logged in");
-    setOpen(false);
+    const config = new Configuration({
+      basePath: API_HOST_BASEPATH,
+    });
+    AuthApiFactory(config)
+      .signinPost({
+        username: values.username,
+        password: values.password,
+      })
+      .then((response) => {
+        setAuth({
+          accessToken: response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+        });
+
+        toast("logged in");
+        setOpen(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast("failed to logged in");
+      });
   };
   return (
     <div>

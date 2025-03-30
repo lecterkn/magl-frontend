@@ -1,18 +1,18 @@
 "use client";
 
 import StoryAddDialog from "./dialog/story_add_dialog";
-import { MyList, Story, userList } from "./story_list";
+import { MyList, userList } from "./story_list";
 import { useState } from "react";
 
 interface Props {
-  story: Story;
+  story: StoryModel;
 }
 
 const StoryCard: React.FC<Props> = ({ story }) => {
   const [myList, setMyList] = useState<MyList[]>(userList);
   const [isOpenAddDialog, setOpenAddDialog] = useState(false);
 
-  const addToMyList = (id: number) => {
+  const addToMyList = (id: string) => {
     setMyList([
       ...myList,
       {
@@ -39,14 +39,12 @@ const StoryCard: React.FC<Props> = ({ story }) => {
           {story.title}
         </h2>
         <h2 className="text-md font-semibold mb-1 truncate text-gray-600">
-          {story.category}
+          {story.categoryName}
         </h2>
         <div className="flex items-center text-sm text-gray-600 mb-2">
           <span className="text-yellow-500 mr-1">&#9733;</span>{" "}
           {/* Star icon */}
           <span>{story.score > 0 ? story.score.toFixed(1) : "N/A"}</span>
-          <span className="mx-2">|</span>
-          <span>{story.episodes > 0 ? `${story.episodes} eps` : "TBA"}</span>
         </div>
         <div className="mt-auto">
           <button

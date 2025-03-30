@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
+import { AuthApiFactory, Configuration } from "@/api";
+import { API_HOST_BASEPATH } from "../topbar/topbar";
 
 interface Props {
   isOpen: boolean;
@@ -58,8 +60,23 @@ const RegisterDialog: React.FC<Props> = ({ isOpen, setOpen }) => {
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    toast(values.username + " registered");
-    setOpen(false);
+    const config = new Configuration({
+      basePath: API_HOST_BASEPATH,
+    });
+    AuthApiFactory(config)
+      .signupPost({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      })
+      .then((response) => {
+        toast('success to signup "' + response.data.id + '"');
+        setOpen(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast("failed to signup");
+      });
   };
   return (
     <div>

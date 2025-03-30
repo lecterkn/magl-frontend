@@ -10,13 +10,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
 import StarSelector from "./story_add_dialog_score_selector";
-import { Story } from "../story_list";
 
 interface Props {
-  story: Story;
+  story: StoryModel;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
-  addList: (id: number) => void;
+  addList: (id: string) => void;
 }
 
 const StoryAddDialog: React.FC<Props> = ({
@@ -31,7 +30,7 @@ const StoryAddDialog: React.FC<Props> = ({
       <DialogContent className="bg-gray-100 sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{story.title}</DialogTitle>
-          <DialogDescription>{story.category}</DialogDescription>
+          <DialogDescription>{story.categoryName}</DialogDescription>
         </DialogHeader>
         <StarSelector setValue={setValue} />
         <DialogFooter>
