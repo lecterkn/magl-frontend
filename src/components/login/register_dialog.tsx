@@ -22,7 +22,7 @@ import {
 import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { AuthApiFactory, Configuration } from "@/api";
-import { API_HOST_BASEPATH } from "../topbar/topbar";
+import { API_HOST_BASEPATH } from "@/api/global";
 
 interface Props {
   isOpen: boolean;

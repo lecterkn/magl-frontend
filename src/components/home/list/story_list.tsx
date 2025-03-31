@@ -3,7 +3,7 @@
 import { useState } from "react";
 import StoryCard from "./story_card";
 import { Configuration, StoryApiFactory } from "@/api";
-import { API_HOST_BASEPATH } from "@/components/topbar/topbar";
+import { API_HOST_BASEPATH } from "@/api/global";
 
 export interface Story {
   id: number;
