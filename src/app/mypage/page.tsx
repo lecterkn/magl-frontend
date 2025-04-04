@@ -2,11 +2,12 @@
 import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { MyList } from "@/components/mypage/mylist";
+import { useMyListStore } from "@/store/mylist";
 import { useAuthStore } from "@/store/user";
 import { useEffect, useState } from "react";
 
 function MyPage() {
-  const [stories, setStroies] = useState<StoryModel[]>([]);
+  const { myList, setMyList } = useMyListStore();
   const { auth } = useAuthStore();
   useEffect(() => {
     if (!auth) {
@@ -32,10 +33,10 @@ function MyPage() {
             score: item.score,
           });
         });
-        setStroies(storyList);
+        setMyList(storyList);
       });
   }, [auth]);
-  return <MyList stories={stories} />;
+  return <MyList stories={myList} />;
 }
 
 export default MyPage;
