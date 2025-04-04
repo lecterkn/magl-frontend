@@ -6,6 +6,7 @@ import { useAuthStore, useUserStore } from "@/store/user";
 import { Configuration, UserApiFactory } from "@/api";
 import { toast } from "sonner";
 import AdministratorTab from "./topbar_admin_tab";
+import { API_HOST_BASEPATH } from "@/api/global";
 
 let title = "MyAnimeGameList";
 // TODO: バックエンドから取得
@@ -17,8 +18,6 @@ let listSize = [
     id: 2,
   },
 ];
-
-export const API_HOST_BASEPATH = process.env.NEXT_PUBLIC_API_HOST_BASEPATH;
 
 const fetchUser = (
   accessToken: string | undefined,

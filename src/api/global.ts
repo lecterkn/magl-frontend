@@ -1,0 +1,1 @@
+export const API_HOST_BASEPATH = process.env.NEXT_PUBLIC_API_HOST_BASEPATH;

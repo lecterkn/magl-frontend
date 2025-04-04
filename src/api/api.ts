@@ -26,6 +26,25 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface RequestMyListAddRequest
+ */
+export interface RequestMyListAddRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof RequestMyListAddRequest
+     */
+    'score'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RequestMyListAddRequest
+     */
+    'storyId'?: string;
+}
+/**
+ * 
+ * @export
  * @interface RequestUserSigninRequest
  */
 export interface RequestUserSigninRequest {
@@ -741,6 +760,119 @@ export class CategoryApi extends BaseAPI {
 
 
 /**
+ * MylistApi - axios parameter creator
+ * @export
+ */
+export const MylistApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * マイリストにストーリーを追加
+         * @summary AddMyList
+         * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsPost: async (request: RequestMyListAddRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'request' is not null or undefined
+            assertParamExists('mylistsPost', 'request', request)
+            const localVarPath = `/mylists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(request, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MylistApi - functional programming interface
+ * @export
+ */
+export const MylistApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MylistApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * マイリストにストーリーを追加
+         * @summary AddMyList
+         * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mylistsPost(request: RequestMyListAddRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mylistsPost(request, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MylistApi.mylistsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * MylistApi - factory interface
+ * @export
+ */
+export const MylistApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MylistApiFp(configuration)
+    return {
+        /**
+         * マイリストにストーリーを追加
+         * @summary AddMyList
+         * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsPost(request: RequestMyListAddRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.mylistsPost(request, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MylistApi - object-oriented interface
+ * @export
+ * @class MylistApi
+ * @extends {BaseAPI}
+ */
+export class MylistApi extends BaseAPI {
+    /**
+     * マイリストにストーリーを追加
+     * @summary AddMyList
+     * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MylistApi
+     */
+    public mylistsPost(request: RequestMyListAddRequest, options?: RawAxiosRequestConfig) {
+        return MylistApiFp(this.configuration).mylistsPost(request, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * StoryApi - axios parameter creator
  * @export
  */
@@ -785,18 +917,18 @@ export const StoryApiAxiosParamCreator = function (configuration?: Configuration
          * ストーリーを新規作成
          * @summary CreateStory
          * @param {string} categoryId カテゴリID
-         * @param {string} name ストーリータイトル
+         * @param {string} title ストーリータイトル
          * @param {string} episode ストーリー区分
          * @param {string} description ストーリー概要
          * @param {File} [image] 画像ファイル
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        storiesPost: async (categoryId: string, name: string, episode: string, description: string, image?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        storiesPost: async (categoryId: string, title: string, episode: string, description: string, image?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'categoryId' is not null or undefined
             assertParamExists('storiesPost', 'categoryId', categoryId)
-            // verify required parameter 'name' is not null or undefined
-            assertParamExists('storiesPost', 'name', name)
+            // verify required parameter 'title' is not null or undefined
+            assertParamExists('storiesPost', 'title', title)
             // verify required parameter 'episode' is not null or undefined
             assertParamExists('storiesPost', 'episode', episode)
             // verify required parameter 'description' is not null or undefined
@@ -826,8 +958,8 @@ export const StoryApiAxiosParamCreator = function (configuration?: Configuration
                 localVarFormParams.append('categoryId', categoryId as any);
             }
     
-            if (name !== undefined) { 
-                localVarFormParams.append('name', name as any);
+            if (title !== undefined) { 
+                localVarFormParams.append('title', title as any);
             }
     
             if (episode !== undefined) { 
@@ -878,15 +1010,15 @@ export const StoryApiFp = function(configuration?: Configuration) {
          * ストーリーを新規作成
          * @summary CreateStory
          * @param {string} categoryId カテゴリID
-         * @param {string} name ストーリータイトル
+         * @param {string} title ストーリータイトル
          * @param {string} episode ストーリー区分
          * @param {string} description ストーリー概要
          * @param {File} [image] 画像ファイル
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async storiesPost(categoryId: string, name: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.storiesPost(categoryId, name, episode, description, image, options);
+        async storiesPost(categoryId: string, title: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.storiesPost(categoryId, title, episode, description, image, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StoryApi.storiesPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -915,15 +1047,15 @@ export const StoryApiFactory = function (configuration?: Configuration, basePath
          * ストーリーを新規作成
          * @summary CreateStory
          * @param {string} categoryId カテゴリID
-         * @param {string} name ストーリータイトル
+         * @param {string} title ストーリータイトル
          * @param {string} episode ストーリー区分
          * @param {string} description ストーリー概要
          * @param {File} [image] 画像ファイル
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        storiesPost(categoryId: string, name: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.storiesPost(categoryId, name, episode, description, image, options).then((request) => request(axios, basePath));
+        storiesPost(categoryId: string, title: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.storiesPost(categoryId, title, episode, description, image, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -951,7 +1083,7 @@ export class StoryApi extends BaseAPI {
      * ストーリーを新規作成
      * @summary CreateStory
      * @param {string} categoryId カテゴリID
-     * @param {string} name ストーリータイトル
+     * @param {string} title ストーリータイトル
      * @param {string} episode ストーリー区分
      * @param {string} description ストーリー概要
      * @param {File} [image] 画像ファイル
@@ -959,8 +1091,8 @@ export class StoryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StoryApi
      */
-    public storiesPost(categoryId: string, name: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig) {
-        return StoryApiFp(this.configuration).storiesPost(categoryId, name, episode, description, image, options).then((request) => request(this.axios, this.basePath));
+    public storiesPost(categoryId: string, title: string, episode: string, description: string, image?: File, options?: RawAxiosRequestConfig) {
+        return StoryApiFp(this.configuration).storiesPost(categoryId, title, episode, description, image, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
