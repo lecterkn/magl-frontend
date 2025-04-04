@@ -15,30 +15,30 @@ import StarSelector from "./story_add_dialog_score_selector";
 import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useAuthStore } from "@/store/user";
+import { useMyListStore } from "@/store/mylist";
 
 interface Props {
   story: StoryModel;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
-  addList: (id: string) => void;
 }
 
-const StoryAddDialog: React.FC<Props> = ({
-  story,
-  isOpen,
-  setOpen,
-  addList,
-}) => {
+const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
+  const { myList, setMyList } = useMyListStore();
   const [value, setValue] = useState<number | null>(null);
   const { auth } = useAuthStore();
   const onSubmit = () => {
+    if (!auth) {
+      toast("authorization error");
+      return;
+    }
     if (!value) {
       toast("score is not set!");
       return;
     }
     const config = new Configuration({
       basePath: API_HOST_BASEPATH,
-      apiKey: "Bearer " + auth?.accessToken,
+      apiKey: "Bearer " + auth.accessToken,
     });
     MylistApiFactory(config)
       .mylistsPost({
@@ -48,7 +48,8 @@ const StoryAddDialog: React.FC<Props> = ({
       .then((response) => {
         if (response.status != 204) {
           toast("failed to add to MyList");
-          addList(story.id);
+          story.score = value;
+          setMyList([...myList, story]);
           setOpen(false);
           return;
         }

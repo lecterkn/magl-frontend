@@ -1,25 +1,21 @@
 "use client";
 
+import { useMyListStore } from "@/store/mylist";
 import StoryAddDialog from "./dialog/story_add_dialog";
-import { MyList, userList } from "./story_list";
 import { useState } from "react";
+import { useAuthStore } from "@/store/user";
+import { toast } from "sonner";
+import { Configuration, MylistApiFactory } from "@/api";
+import { API_HOST_BASEPATH } from "@/api/global";
 
 interface Props {
   story: StoryModel;
 }
 
 const StoryCard: React.FC<Props> = ({ story }) => {
-  const [myList, setMyList] = useState<MyList[]>(userList);
+  const { myList } = useMyListStore();
   const [isOpenAddDialog, setOpenAddDialog] = useState(false);
 
-  const addToMyList = (id: string) => {
-    setMyList([
-      ...myList,
-      {
-        id: id,
-      },
-    ]);
-  };
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
       <div className="w-full h-48 bg-gray-200 border-b border-gray-300 flex items-center justify-center object-fill">
@@ -68,7 +64,6 @@ const StoryCard: React.FC<Props> = ({ story }) => {
         story={story}
         isOpen={isOpenAddDialog}
         setOpen={setOpenAddDialog}
-        addList={addToMyList}
       />
     </div>
   );

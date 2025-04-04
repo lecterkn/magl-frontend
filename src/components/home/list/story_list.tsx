@@ -1,33 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StoryCard from "./story_card";
 import { Configuration, StoryApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 
-export interface Story {
-  id: number;
-  title: string;
-  category: string;
-  score: number;
-  imageUrl?: string;
-  episodes: number;
-}
-
-export interface MyList {
-  id: string;
-}
-
-export const userList: MyList[] = [
-  {
-    id: "2",
-  },
-  {
-    id: "2",
-  },
-];
-
-const fetchStories = (setStories: (stories: StoryModel[] | null) => void) => {
+const fetchStories = (setStories: (stories: StoryModel[]) => void) => {
   const config = new Configuration({
     basePath: API_HOST_BASEPATH,
   });
@@ -55,13 +33,13 @@ const fetchStories = (setStories: (stories: StoryModel[] | null) => void) => {
 };
 
 function StoryList() {
-  const [stories, setStories] = useState<StoryModel[] | null>(null);
-  if (!stories) {
+  const [stories, setStories] = useState<StoryModel[]>([]);
+  useEffect(() => {
     fetchStories(setStories);
-  }
+  }, []);
   return (
     <div className="container mx-auto">
-      {stories && stories.length > 0 ? (
+      {stories.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {stories.map((story) => (
             <StoryCard key={story.id} story={story} />

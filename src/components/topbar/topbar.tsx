@@ -1,36 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginDialog from "../login/login_dialog";
 import { useAuthStore, useUserStore } from "@/store/user";
-import { Configuration, UserApiFactory } from "@/api";
+import { Configuration, MylistApiFactory, UserApiFactory } from "@/api";
 import { toast } from "sonner";
 import AdministratorTab from "./topbar_admin_tab";
 import { API_HOST_BASEPATH } from "@/api/global";
+import { useRouter } from "next/navigation";
+import { useMyListStore } from "@/store/mylist";
 
 let title = "MyAnimeGameList";
-// TODO: バックエンドから取得
-let listSize = [
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-];
 
 const fetchUser = (
-  accessToken: string | undefined,
+  accessToken: string,
   setUser: (user: UserModel | null) => void,
 ) => {
-  if (!API_HOST_BASEPATH) {
-    console.log("API_HOST_BASEPATH is not set");
-    return;
-  }
-  if (!accessToken) {
-    console.log("accessToken is not set");
-    return;
-  }
   const config = new Configuration({
     basePath: API_HOST_BASEPATH,
     apiKey: "Bearer " + accessToken,
@@ -46,19 +31,54 @@ const fetchUser = (
     });
 };
 
+const fetchMyList = (
+  accessToken: string,
+  setMyList: (myList: StoryModel[]) => void,
+) => {
+  const config = new Configuration({
+    basePath: API_HOST_BASEPATH,
+    apiKey: "Bearer " + accessToken,
+  });
+  MylistApiFactory(config)
+    .mylistsGet()
+    .then((response) => {
+      const storyList: StoryModel[] = [];
+      response.data.list.map((item) => {
+        storyList.push({
+          id: item.id,
+          title: item.title,
+          episode: item.episode,
+          description: item.description,
+          imageUrl: item.imageUrl,
+          categoryId: item.categoryId,
+          categoryName: item.categoryName,
+          score: item.score,
+        });
+      });
+      setMyList(storyList);
+    })
+    .catch(() => {
+      toast("failed to load MyList");
+    });
+};
+
 function Topbar() {
   const [isOpenLoginDialog, setOpenLoginDialog] = useState(false);
   const { auth, setAuth } = useAuthStore();
   const { user, setUser } = useUserStore();
-  const [stateUser, setStateUser] = useState<UserModel | null>(null);
+  const { myList, setMyList } = useMyListStore();
+  const router = useRouter();
   // ユーザー情報取得
   const updateUser = (userModel: UserModel | null) => {
     setUser(userModel);
-    setStateUser(userModel);
   };
-  if (!stateUser) {
-    fetchUser(auth?.accessToken, updateUser);
-  }
+  useEffect(() => {
+    if (!auth) {
+      return;
+    }
+    fetchUser(auth.accessToken, updateUser);
+    fetchMyList(auth.accessToken, setMyList);
+  }, [auth]);
   const clickUser = () => {
     setAuth(null);
     updateUser(null);
@@ -67,7 +87,15 @@ function Topbar() {
   return (
     <nav className="bg-blue-600 rounded-lg shadow-md p-4 mb-6 text-white">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <h1 className="text-2xl font-bold">{title}</h1>
+        <a
+          className="text-2xl font-bold"
+          href="#"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          {title}
+        </a>
         <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
           <input
             type="text"
@@ -76,8 +104,13 @@ function Topbar() {
           />
           <div className="flex space-x-2">
             <AdministratorTab role={user?.role} />
-            <button className="px-4 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-700">
-              My List ({listSize.length})
+            <button
+              className="px-4 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-700"
+              onClick={() => {
+                router.push("/mypage");
+              }}
+            >
+              My List ({myList.length})
             </button>
             <button
               onClick={() => {
