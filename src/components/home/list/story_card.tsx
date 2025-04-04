@@ -55,8 +55,8 @@ const StoryCard: React.FC<Props> = ({ story }) => {
             }`}
           >
             {myList.some((item) => item.id === story.id)
-              ? "In List"
-              : "Add to List"}
+              ? "In MyList"
+              : "Add to MyList"}
           </button>
         </div>
       </div>

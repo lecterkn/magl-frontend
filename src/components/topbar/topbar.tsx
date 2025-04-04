@@ -9,6 +9,7 @@ import AdministratorTab from "./topbar_admin_tab";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useRouter } from "next/navigation";
 import { useMyListStore } from "@/store/mylist";
+import { UserDropdownButton } from "./topbar_user_dropdown_button";
 
 let title = "MyAnimeGameList";
 
@@ -64,26 +65,17 @@ const fetchMyList = (
 
 function Topbar() {
   const [isOpenLoginDialog, setOpenLoginDialog] = useState(false);
-  const { auth, setAuth } = useAuthStore();
+  const { auth } = useAuthStore();
   const { user, setUser } = useUserStore();
   const { myList, setMyList } = useMyListStore();
   const router = useRouter();
-  // ユーザー情報取得
-  const updateUser = (userModel: UserModel | null) => {
-    setUser(userModel);
-  };
   useEffect(() => {
     if (!auth) {
       return;
     }
-    fetchUser(auth.accessToken, updateUser);
+    fetchUser(auth.accessToken, setUser);
     fetchMyList(auth.accessToken, setMyList);
   }, [auth]);
-  const clickUser = () => {
-    setAuth(null);
-    updateUser(null);
-    toast("signout");
-  };
   return (
     <nav className="bg-blue-600 rounded-lg shadow-md p-4 mb-6 text-white">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -102,29 +94,29 @@ function Topbar() {
             placeholder="Search AnimeGame..."
             className="bg-gray-100 px-3 py-2 rounded-md text-gray-800 w-full md:w-64"
           />
-          <div className="flex space-x-2">
-            <AdministratorTab role={user?.role} />
+          {auth && user ? (
+            <div className="flex space-x-2">
+              <AdministratorTab role={user?.role} />
+              <button
+                className="px-4 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-700"
+                onClick={() => {
+                  router.push("/mypage");
+                }}
+              >
+                My List ({myList.length})
+              </button>
+              <UserDropdownButton title={user.name} />
+            </div>
+          ) : (
             <button
-              className="px-4 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-700"
               onClick={() => {
-                router.push("/mypage");
-              }}
-            >
-              My List ({myList.length})
-            </button>
-            <button
-              onClick={() => {
-                if (user) {
-                  clickUser();
-                } else {
-                  setOpenLoginDialog(true);
-                }
+                setOpenLoginDialog(true);
               }}
               className="px-4 py-2 rounded-md transition-colors bg-blue-800 hover:bg-blue-900"
             >
-              {user?.name ?? "Sign In"}
+              Sign In
             </button>
-          </div>
+          )}
         </div>
       </div>
       <LoginDialog isOpen={isOpenLoginDialog} setOpen={setOpenLoginDialog} />
