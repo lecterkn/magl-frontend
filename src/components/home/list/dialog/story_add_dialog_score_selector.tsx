@@ -21,7 +21,7 @@ const stars = [
 
 interface StarSelecterProps {
   star?: number;
-  setValue: (value: number | null) => void;
+  setValue: (value: number) => void;
 }
 
 const StarSelector: React.FC<StarSelecterProps> = ({ star, setValue }) => {

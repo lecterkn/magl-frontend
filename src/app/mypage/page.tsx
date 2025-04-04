@@ -4,7 +4,7 @@ import { API_HOST_BASEPATH } from "@/api/global";
 import { MyList } from "@/components/mypage/mylist";
 import { useMyListStore } from "@/store/mylist";
 import { useAuthStore } from "@/store/user";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function MyPage() {
   const { myList, setMyList } = useMyListStore();

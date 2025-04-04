@@ -11,11 +11,8 @@ interface Props {
 
 export const MyListStoryCard: React.FC<Props> = ({ story }) => {
   const { auth } = useAuthStore();
-  const [score, setScore] = useState<number | null>(story.score);
-  const updateScore = (score: number | null) => {
-    if (!score) {
-      return;
-    }
+  const [score, setScore] = useState<number>(story.score);
+  const updateScore = (score: number) => {
     const config = new Configuration({
       basePath: API_HOST_BASEPATH,
       apiKey: "Bearer " + auth?.accessToken,
@@ -25,13 +22,10 @@ export const MyListStoryCard: React.FC<Props> = ({ story }) => {
         storyId: story.id,
         score: score,
       })
-      .then((response) => {
-        if (response.status == 204) {
-          toast("updated score");
-          setScore(score);
-          return;
-        }
-        toast("failed to update score");
+      .then(() => {
+        toast("updated score");
+        story.score = score;
+        setScore(score);
       })
       .catch(() => {
         toast("failed to update score");
@@ -53,7 +47,7 @@ export const MyListStoryCard: React.FC<Props> = ({ story }) => {
         <label htmlFor={`score-${story.id}`} className="sr-only">
           Score
         </label>
-        <StarSelector setValue={updateScore} star={story.score} />
+        <StarSelector setValue={updateScore} star={score} />
       </div>
     </div>
   );
