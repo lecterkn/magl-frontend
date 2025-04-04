@@ -7,36 +7,42 @@ import {
 } from "@/components/ui/select";
 
 const stars = [
-  { value: 1, description: "Very Bad" },
-  { value: 2, description: "Bad" },
-  { value: 3, description: "Poor" },
-  { value: 4, description: "Below Average" },
-  { value: 5, description: "Average" },
-  { value: 6, description: "Fair" },
-  { value: 7, description: "Good" },
-  { value: 8, description: "Very Good" },
-  { value: 9, description: "Excellent" },
-  { value: 10, description: "Outstanding" },
+  { name: "1", description: "Very Bad" },
+  { name: "2", description: "Bad" },
+  { name: "3", description: "Poor" },
+  { name: "4", description: "Below Average" },
+  { name: "5", description: "Average" },
+  { name: "6", description: "Fair" },
+  { name: "7", description: "Good" },
+  { name: "8", description: "Very Good" },
+  { name: "9", description: "Excellent" },
+  { name: "10", description: "Outstanding" },
 ];
 
 interface StarSelecterProps {
+  star?: number;
   setValue: (value: number | null) => void;
 }
 
-const StarSelector: React.FC<StarSelecterProps> = ({ setValue }) => {
+const StarSelector: React.FC<StarSelecterProps> = ({ star, setValue }) => {
   return (
     <Select
       onValueChange={(value) => {
-        setValue(value);
+        setValue(parseInt(value));
       }}
+      defaultValue={
+        star
+          ? stars.find((item) => item.name == star.toString())?.name
+          : undefined
+      }
     >
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Score" />
       </SelectTrigger>
       <SelectContent>
         {stars.map((star) => (
-          <SelectItem key={star.value} value={star.value}>
-            {star.value} ({star.description})
+          <SelectItem key={star.name} value={star.name}>
+            {star.name} ({star.description})
           </SelectItem>
         ))}
       </SelectContent>

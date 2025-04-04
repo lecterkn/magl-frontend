@@ -34,13 +34,32 @@ export interface RequestMyListAddRequest {
      * @type {number}
      * @memberof RequestMyListAddRequest
      */
-    'score'?: number;
+    'score': number;
     /**
      * 
      * @type {string}
      * @memberof RequestMyListAddRequest
      */
-    'storyId'?: string;
+    'storyId': string;
+}
+/**
+ * 
+ * @export
+ * @interface RequestMyListUpdateRequest
+ */
+export interface RequestMyListUpdateRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof RequestMyListUpdateRequest
+     */
+    'score': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RequestMyListUpdateRequest
+     */
+    'storyId': string;
 }
 /**
  * 
@@ -141,6 +160,74 @@ export interface ResponseCategoryResponse {
      * @memberof ResponseCategoryResponse
      */
     'updatedAt'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResponseMyListListResponse
+ */
+export interface ResponseMyListListResponse {
+    /**
+     * 
+     * @type {Array<ResponseMyListResponse>}
+     * @memberof ResponseMyListListResponse
+     */
+    'list': Array<ResponseMyListResponse>;
+}
+/**
+ * 
+ * @export
+ * @interface ResponseMyListResponse
+ */
+export interface ResponseMyListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'categoryId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'categoryName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'episode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'imageUrl': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResponseMyListResponse
+     */
+    'score': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResponseMyListResponse
+     */
+    'title': string;
 }
 /**
  * 
@@ -766,6 +853,78 @@ export class CategoryApi extends BaseAPI {
 export const MylistApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * マイリストを取得
+         * @summary GetMyList
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/mylists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * マイリストのストーリーを更新
+         * @summary UpdateMyList
+         * @param {RequestMyListUpdateRequest} request マイリスト更新リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsPatch: async (request: RequestMyListUpdateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'request' is not null or undefined
+            assertParamExists('mylistsPatch', 'request', request)
+            const localVarPath = `/mylists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(request, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * マイリストにストーリーを追加
          * @summary AddMyList
          * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
@@ -815,6 +974,31 @@ export const MylistApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = MylistApiAxiosParamCreator(configuration)
     return {
         /**
+         * マイリストを取得
+         * @summary GetMyList
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mylistsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseMyListListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mylistsGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MylistApi.mylistsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * マイリストのストーリーを更新
+         * @summary UpdateMyList
+         * @param {RequestMyListUpdateRequest} request マイリスト更新リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mylistsPatch(request: RequestMyListUpdateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mylistsPatch(request, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MylistApi.mylistsPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * マイリストにストーリーを追加
          * @summary AddMyList
          * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
@@ -838,6 +1022,25 @@ export const MylistApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = MylistApiFp(configuration)
     return {
         /**
+         * マイリストを取得
+         * @summary GetMyList
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsGet(options?: RawAxiosRequestConfig): AxiosPromise<ResponseMyListListResponse> {
+            return localVarFp.mylistsGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * マイリストのストーリーを更新
+         * @summary UpdateMyList
+         * @param {RequestMyListUpdateRequest} request マイリスト更新リクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsPatch(request: RequestMyListUpdateRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.mylistsPatch(request, options).then((request) => request(axios, basePath));
+        },
+        /**
          * マイリストにストーリーを追加
          * @summary AddMyList
          * @param {RequestMyListAddRequest} request マイリスト追加リクエスト
@@ -857,6 +1060,29 @@ export const MylistApiFactory = function (configuration?: Configuration, basePat
  * @extends {BaseAPI}
  */
 export class MylistApi extends BaseAPI {
+    /**
+     * マイリストを取得
+     * @summary GetMyList
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MylistApi
+     */
+    public mylistsGet(options?: RawAxiosRequestConfig) {
+        return MylistApiFp(this.configuration).mylistsGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * マイリストのストーリーを更新
+     * @summary UpdateMyList
+     * @param {RequestMyListUpdateRequest} request マイリスト更新リクエスト
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MylistApi
+     */
+    public mylistsPatch(request: RequestMyListUpdateRequest, options?: RawAxiosRequestConfig) {
+        return MylistApiFp(this.configuration).mylistsPatch(request, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * マイリストにストーリーを追加
      * @summary AddMyList
