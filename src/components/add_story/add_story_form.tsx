@@ -13,7 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -82,6 +82,8 @@ const fetchCategories = (
 };
 
 function AddStoryForm() {
+  const { auth } = useAuthStore();
+  const [categories, setCategories] = useState<CategoryModel[] | null>(null);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -90,14 +92,12 @@ function AddStoryForm() {
       description: "",
     },
   });
-  const { auth } = useAuthStore();
+  useEffect(() => {
+    fetchCategories(setCategories);
+  }, []);
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    if (!API_HOST_BASEPATH) {
-      console.log("API_HOST_BASEPATH is not set");
-      return;
-    }
-    if (!auth?.accessToken) {
-      console.log("accessToken is not set");
+    if (!auth) {
+      toast("authorization error");
       return;
     }
     const config = new Configuration({
@@ -112,22 +112,14 @@ function AddStoryForm() {
         values.description,
         values.imageFile ?? undefined,
       )
-      .then((response) => {
-        if (response.status == 204) {
-          toast("success to add story");
-          form.reset();
-        } else {
-          toast("failed to add story");
-        }
+      .then(() => {
+        toast("success to add story");
+        form.reset();
       })
       .catch(() => {
         toast("failed to add story");
       });
   };
-  const [categories, setCategories] = useState<CategoryModel[] | null>(null);
-  if (!categories) {
-    fetchCategories(setCategories);
-  }
 
   return (
     <div className="container mx-auto w-full max-w-2xl bg-white p-6 sm:p-8 rounded-xl shadow-lg">
