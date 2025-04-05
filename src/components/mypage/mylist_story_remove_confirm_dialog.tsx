@@ -44,8 +44,7 @@ export const StoryRemoveConfirmDialog: React.FC<Props> = ({
       .mylistsStoryIdDelete(story.id)
       .then(() => {
         toast(story.title + " has been removed");
-        setMyList(myList.splice(index - 1, index));
-        console.log(myList.splice(index - 1, index));
+        setMyList(myList.filter((item) => item.id !== story.id));
         setOpen(false);
       })
       .catch(() => {
