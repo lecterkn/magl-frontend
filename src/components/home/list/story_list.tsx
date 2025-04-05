@@ -1,42 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import StoryCard from "./story_card";
-import { Configuration, StoryApiFactory } from "@/api";
-import { API_HOST_BASEPATH } from "@/api/global";
 
-const fetchStories = (setStories: (stories: StoryModel[]) => void) => {
-  const config = new Configuration({
-    basePath: API_HOST_BASEPATH,
-  });
-  StoryApiFactory(config)
-    .storiesGet()
-    .then((response) => {
-      const storyList: StoryModel[] = [];
-      response.data.list.map((item) => {
-        storyList.push({
-          id: item.id,
-          categoryId: item.categoryId,
-          categoryName: item.categoryName,
-          title: item.title,
-          episode: item.episode,
-          description: item.description,
-          score: 5,
-          imageUrl: item.imageUrl,
-        });
-        setStories(storyList);
-      });
-    })
-    .catch(() => {
-      setStories([]);
-    });
-};
+interface Props {
+  stories: StoryModel[];
+}
 
-function StoryList() {
-  const [stories, setStories] = useState<StoryModel[]>([]);
-  useEffect(() => {
-    fetchStories(setStories);
-  }, []);
+const StoryList: React.FC<Props> = ({ stories }) => {
   return (
     <div className="container mx-auto">
       {stories.length > 0 ? (
@@ -50,7 +18,7 @@ function StoryList() {
       )}
     </div>
   );
-}
+};
 
 export function EmptyContent() {
   return (

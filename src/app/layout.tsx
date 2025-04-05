@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "MyAnimeGamelist";
+const title = "MyAnimeGameList";
 const description = "Created by lecterkn with gemini-2.5 pro";
 
 export const metadata: Metadata = {
@@ -39,7 +39,7 @@ export default function RootLayout({
             <p>
               {metadata.title?.toString()} - {metadata.description?.toString()}
             </p>
-            <p>Copyright 2022 - lecterkn</p>
+            <p>Copyright 2025 - lecterkn</p>
           </footer>
           <Toaster />
         </div>

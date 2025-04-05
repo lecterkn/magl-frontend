@@ -963,6 +963,43 @@ export const MylistApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * マイリストからストーリーを削除
+         * @summary RemoveFromMyList
+         * @param {string} storyId ストーリーID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsStoryIdDelete: async (storyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'storyId' is not null or undefined
+            assertParamExists('mylistsStoryIdDelete', 'storyId', storyId)
+            const localVarPath = `/mylists/{storyId}`
+                .replace(`{${"storyId"}}`, encodeURIComponent(String(storyId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1011,6 +1048,19 @@ export const MylistApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['MylistApi.mylistsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * マイリストからストーリーを削除
+         * @summary RemoveFromMyList
+         * @param {string} storyId ストーリーID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mylistsStoryIdDelete(storyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mylistsStoryIdDelete(storyId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MylistApi.mylistsStoryIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1049,6 +1099,16 @@ export const MylistApiFactory = function (configuration?: Configuration, basePat
          */
         mylistsPost(request: RequestMyListAddRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.mylistsPost(request, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * マイリストからストーリーを削除
+         * @summary RemoveFromMyList
+         * @param {string} storyId ストーリーID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mylistsStoryIdDelete(storyId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.mylistsStoryIdDelete(storyId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1093,6 +1153,18 @@ export class MylistApi extends BaseAPI {
      */
     public mylistsPost(request: RequestMyListAddRequest, options?: RawAxiosRequestConfig) {
         return MylistApiFp(this.configuration).mylistsPost(request, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * マイリストからストーリーを削除
+     * @summary RemoveFromMyList
+     * @param {string} storyId ストーリーID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MylistApi
+     */
+    public mylistsStoryIdDelete(storyId: string, options?: RawAxiosRequestConfig) {
+        return MylistApiFp(this.configuration).mylistsStoryIdDelete(storyId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

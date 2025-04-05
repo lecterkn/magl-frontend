@@ -7,8 +7,9 @@ import { useAuthStore } from "@/store/user";
 import { useEffect } from "react";
 
 function MyPage() {
-  const { myList, setMyList } = useMyListStore();
-  const { auth } = useAuthStore();
+  const myList = useMyListStore((state) => state.myList);
+  const setMyList = useMyListStore((state) => state.setMyList);
+  const auth = useAuthStore((state) => state.auth);
   useEffect(() => {
     if (!auth) {
       return;
@@ -20,7 +21,7 @@ function MyPage() {
     MylistApiFactory(config)
       .mylistsGet()
       .then((response) => {
-        const storyList: StoryModel[] = [];
+        const storyList: MyListStoryModel[] = [];
         response.data.list.map((item) => {
           storyList.push({
             id: item.id,
