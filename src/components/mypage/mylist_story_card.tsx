@@ -6,7 +6,7 @@ import { API_HOST_BASEPATH } from "@/api/global";
 import { toast } from "sonner";
 
 interface Props {
-  story: StoryModel;
+  story: MyListStoryModel;
 }
 
 export const MyListStoryCard: React.FC<Props> = ({ story }) => {

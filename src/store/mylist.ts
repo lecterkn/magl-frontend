@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 interface MyListState {
-  myList: StoryModel[];
-  setMyList: (mylist: StoryModel[]) => void;
+  myList: MyListStoryModel[];
+  setMyList: (mylist: MyListStoryModel[]) => void;
 }
 
 export const useMyListStore = create<MyListState>((set) => ({

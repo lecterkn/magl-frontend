@@ -2,7 +2,7 @@
 import { MyListStoryCard } from "./mylist_story_card";
 
 interface Props {
-  stories: StoryModel[];
+  stories: MyListStoryModel[];
 }
 
 export const MyList: React.FC<Props> = ({ stories }) => {

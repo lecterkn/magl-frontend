@@ -3,10 +3,6 @@
 import { useMyListStore } from "@/store/mylist";
 import StoryAddDialog from "./dialog/story_add_dialog";
 import { useState } from "react";
-import { useAuthStore } from "@/store/user";
-import { toast } from "sonner";
-import { Configuration, MylistApiFactory } from "@/api";
-import { API_HOST_BASEPATH } from "@/api/global";
 
 interface Props {
   story: StoryModel;
@@ -40,7 +36,9 @@ const StoryCard: React.FC<Props> = ({ story }) => {
         <div className="flex items-center text-sm text-gray-600 mb-2">
           <span className="text-yellow-500 mr-1">&#9733;</span>{" "}
           {/* Star icon */}
-          <span>{story.score > 0 ? story.score.toFixed(1) : "N/A"}</span>
+          <span>
+            {story.score && story.score > 0 ? story.score.toFixed(1) : "N/A"}
+          </span>
         </div>
         <div className="mt-auto">
           <button
