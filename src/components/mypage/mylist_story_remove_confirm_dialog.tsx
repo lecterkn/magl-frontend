@@ -32,9 +32,6 @@ export const StoryRemoveConfirmDialog: React.FC<Props> = ({
       toast("authorization error");
       return;
     }
-    if (!myList.find((item) => item.id === story.id)) {
-      toast("the story is not in the MyList");
-    }
     const config = new Configuration({
       basePath: API_HOST_BASEPATH,
       apiKey: "Bearer " + auth.accessToken,
