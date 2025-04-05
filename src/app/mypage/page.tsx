@@ -7,8 +7,9 @@ import { useAuthStore } from "@/store/user";
 import { useEffect } from "react";
 
 function MyPage() {
-  const { myList, setMyList } = useMyListStore();
-  const { auth } = useAuthStore();
+  const myList = useMyListStore((state) => state.myList);
+  const setMyList = useMyListStore((state) => state.setMyList);
+  const auth = useAuthStore((state) => state.auth);
   useEffect(() => {
     if (!auth) {
       return;

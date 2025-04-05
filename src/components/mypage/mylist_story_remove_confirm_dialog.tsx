@@ -1,5 +1,4 @@
-"use client";
-
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -9,60 +8,49 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { useState } from "react";
-import StarSelector from "./story_add_dialog_score_selector";
+import { useAuthStore } from "@/store/user";
 import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
-import { useAuthStore } from "@/store/user";
 import { useMyListStore } from "@/store/mylist";
 
 interface Props {
-  story: StoryModel;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
+  story: MyListStoryModel;
 }
 
-const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
-  const { myList, setMyList } = useMyListStore();
-  const [value, setValue] = useState<number | null>(null);
-  const { auth } = useAuthStore();
+export const StoryRemoveConfirmDialog: React.FC<Props> = ({
+  isOpen,
+  setOpen,
+  story,
+}) => {
+  const auth = useAuthStore((state) => state.auth);
+  const myList = useMyListStore((state) => state.myList);
+  const setMyList = useMyListStore((state) => state.setMyList);
   const onSubmit = () => {
     if (!auth) {
       toast("authorization error");
       return;
     }
-    if (!value) {
-      toast("score is not set!");
-      return;
+    const index = myList.findIndex((item) => item.id == story.id);
+    if (index < 0) {
+      toast("the story is not in the MyList");
     }
     const config = new Configuration({
       basePath: API_HOST_BASEPATH,
       apiKey: "Bearer " + auth.accessToken,
     });
     MylistApiFactory(config)
-      .mylistsPost({
-        storyId: story.id,
-        score: value,
-      })
+      .mylistsStoryIdDelete(story.id)
       .then(() => {
-        setMyList([
-          ...myList,
-          {
-            id: story.id,
-            title: story.title,
-            episode: story.episode,
-            description: story.description,
-            imageUrl: story.imageUrl,
-            categoryId: story.categoryId,
-            categoryName: story.categoryName,
-            score: value,
-          },
-        ]);
+        toast(story.title + " has been removed");
+        setMyList(myList.splice(index - 1, index));
+        console.log(myList.splice(index - 1, index));
         setOpen(false);
       })
       .catch(() => {
-        toast("failed to add to MyList");
+        toast("failed to remove from MyList");
+        setOpen(false);
       });
   };
   return (
@@ -72,21 +60,18 @@ const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
           <DialogTitle>{story.title}</DialogTitle>
           <DialogDescription>{story.categoryName}</DialogDescription>
         </DialogHeader>
-        <StarSelector setValue={setValue} />
         <DialogFooter>
           <Button
             className="bg-gray-500 hover:bg-gray-600"
             onClick={() => setOpen(false)}
           >
-            Close
+            Cancel
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700" onClick={onSubmit}>
-            Save
+          <Button className="bg-red-600 hover:bg-red-700" onClick={onSubmit}>
+            Remove
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-
-export default StoryAddDialog;

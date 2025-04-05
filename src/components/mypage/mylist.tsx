@@ -1,4 +1,5 @@
 "use client";
+
 import { MyListStoryCard } from "./mylist_story_card";
 
 interface Props {
