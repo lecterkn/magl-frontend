@@ -16,6 +16,8 @@ let title = "MyAnimeGameList";
 const fetchUser = (
   accessToken: string,
   setUser: (user: UserModel | null) => void,
+  setAuth: (user: AuthModel | null) => void,
+  setMyList: (user: MyListStoryModel[]) => void,
 ) => {
   const config = new Configuration({
     basePath: API_HOST_BASEPATH,
@@ -29,12 +31,18 @@ const fetchUser = (
         name: response.data.name,
         role: response.data.role,
       });
+    })
+    .catch((e) => {
+      if (e.status === 401) {
+        setMyList([]);
+        setAuth(null);
+      }
     });
 };
 
 const fetchMyList = (
   accessToken: string,
-  setMyList: (myList: StoryModel[]) => void,
+  setMyList: (myList: MyListStoryModel[]) => void,
 ) => {
   const config = new Configuration({
     basePath: API_HOST_BASEPATH,
@@ -43,7 +51,7 @@ const fetchMyList = (
   MylistApiFactory(config)
     .mylistsGet()
     .then((response) => {
-      const storyList: StoryModel[] = [];
+      const storyList: MyListStoryModel[] = [];
       response.data.list.map((item) => {
         storyList.push({
           id: item.id,
@@ -65,15 +73,18 @@ const fetchMyList = (
 
 function Topbar() {
   const [isOpenLoginDialog, setOpenLoginDialog] = useState(false);
-  const { auth } = useAuthStore();
-  const { user, setUser } = useUserStore();
-  const { myList, setMyList } = useMyListStore();
+  const auth = useAuthStore((state) => state.auth);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+  const myList = useMyListStore((state) => state.myList);
+  const setMyList = useMyListStore((state) => state.setMyList);
   const router = useRouter();
   useEffect(() => {
     if (!auth) {
       return;
     }
-    fetchUser(auth.accessToken, setUser);
+    fetchUser(auth.accessToken, setUser, setAuth, setMyList);
     fetchMyList(auth.accessToken, setMyList);
   }, [auth]);
   return (
