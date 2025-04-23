@@ -2,6 +2,7 @@
 import { Configuration, StoryApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import StoryList from "@/components/home/list/story_list";
+import { StoryModel } from "@/model/story";
 import { useEffect, useState } from "react";
 
 const fetchStories = (setStories: (stories: StoryModel[]) => void) => {

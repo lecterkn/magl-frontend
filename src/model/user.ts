@@ -1,10 +1,10 @@
-interface UserModel {
+export interface UserModel {
   id: string;
   name: string;
   role: string;
 }
 
-interface AuthModel {
+export interface AuthModel {
   accessToken: string;
   refreshToken: string;
 }

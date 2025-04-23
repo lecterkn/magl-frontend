@@ -16,6 +16,7 @@ import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useAuthStore } from "@/store/user";
 import { useMyListStore } from "@/store/mylist";
+import { StoryModel } from "@/model/story";
 
 interface Props {
   story: StoryModel;

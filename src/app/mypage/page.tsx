@@ -2,6 +2,7 @@
 import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { MyList } from "@/components/mypage/mylist";
+import { MyListStoryModel } from "@/model/story";
 import { useMyListStore } from "@/store/mylist";
 import { useAuthStore } from "@/store/user";
 import { useEffect } from "react";
@@ -36,7 +37,7 @@ function MyPage() {
         });
         setMyList(storyList);
       });
-  }, [auth]);
+  }, [auth, setMyList]);
   return <MyList stories={myList} />;
 }
 

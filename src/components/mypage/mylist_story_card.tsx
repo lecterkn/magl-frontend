@@ -7,6 +7,7 @@ import { Configuration, MylistApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { toast } from "sonner";
 import { StoryRemoveConfirmDialog } from "./mylist_story_remove_confirm_dialog";
+import { MyListStoryModel } from "@/model/story";
 
 interface Props {
   story: MyListStoryModel;

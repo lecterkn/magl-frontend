@@ -126,7 +126,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, setOpen }) => {
                 )}
               />
               <div>
-                Don't have an account?{" "}
+                <p>Dont have an account?</p>
                 <a
                   className="font-semibold text-blue-600"
                   href="#"

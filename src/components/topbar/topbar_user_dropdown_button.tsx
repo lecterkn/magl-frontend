@@ -9,7 +9,6 @@ import {
 } from "../ui/dropdown-menu";
 import { useAuthStore } from "@/store/user";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 import { useMyListStore } from "@/store/mylist";
 
 interface Props {

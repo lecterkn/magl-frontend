@@ -34,7 +34,10 @@ const FormSchema = z.object({
     .instanceof(File)
     .refine(
       (file) => {
-        !file || ["image/png", "image/jpeg", "image/jpg"].includes(file.type);
+        if (!file) {
+          return true;
+        }
+        return ["image/png", "image/jpeg", "image/jpg"].includes(file.type);
       },
       { message: "Invalid image file type" },
     )
