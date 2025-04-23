@@ -25,6 +25,7 @@ import { CategoryApiFactory, Configuration, StoryApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useAuthStore } from "@/store/user";
 import { toast } from "sonner";
+import { CategoryModel } from "@/model/category";
 
 const FormSchema = z.object({
   title: z
@@ -51,7 +52,10 @@ const FormSchema = z.object({
     .instanceof(File)
     .refine(
       (file) => {
-        !file || ["image/png", "image/jpeg", "image/jpg"].includes(file.type);
+        if (!file) {
+          return true;
+        }
+        return ["image/png", "image/jpeg", "image/jpg"].includes(file.type);
       },
       { message: "Invalid image file type" },
     )

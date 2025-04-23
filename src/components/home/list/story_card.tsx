@@ -3,6 +3,7 @@
 import { useMyListStore } from "@/store/mylist";
 import StoryAddDialog from "./dialog/story_add_dialog";
 import { useState } from "react";
+import { StoryModel } from "@/model/story";
 
 interface Props {
   story: StoryModel;

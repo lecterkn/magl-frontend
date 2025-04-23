@@ -10,8 +10,10 @@ import { API_HOST_BASEPATH } from "@/api/global";
 import { useRouter } from "next/navigation";
 import { useMyListStore } from "@/store/mylist";
 import { UserDropdownButton } from "./topbar_user_dropdown_button";
+import { AuthModel, UserModel } from "@/model/user";
+import { MyListStoryModel } from "@/model/story";
 
-let title = "MyAnimeGameList";
+const title = "MyAnimeGameList";
 
 const fetchUser = (
   accessToken: string,

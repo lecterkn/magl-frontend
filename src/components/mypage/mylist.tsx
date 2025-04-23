@@ -1,5 +1,6 @@
 "use client";
 
+import { MyListStoryModel } from "@/model/story";
 import { MyListStoryCard } from "./mylist_story_card";
 
 interface Props {

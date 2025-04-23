@@ -1,3 +1,4 @@
+import { MyListStoryModel } from "@/model/story";
 import { create } from "zustand";
 
 interface MyListState {

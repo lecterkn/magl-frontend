@@ -1,4 +1,4 @@
-interface StoryModel {
+export interface StoryModel {
   id: string;
   categoryId: string;
   categoryName: string;
@@ -9,7 +9,7 @@ interface StoryModel {
   imageUrl: string | null;
 }
 
-interface MyListStoryModel {
+export interface MyListStoryModel {
   id: string;
   categoryId: string;
   categoryName: string;

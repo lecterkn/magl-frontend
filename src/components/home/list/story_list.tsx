@@ -1,3 +1,4 @@
+import { StoryModel } from "@/model/story";
 import StoryCard from "./story_card";
 
 interface Props {
