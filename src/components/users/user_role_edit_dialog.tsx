@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { UserModel } from "@/model/user";
-import { useAuthStore, useUserStore } from "@/store/user";
+import { useAuthStore } from "@/store/user";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { RoleSelector } from "./user_role_selector";

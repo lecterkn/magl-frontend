@@ -80,7 +80,7 @@ function AddCategoryForm() {
   return (
     <div className="container mx-auto w-full max-w-2xl bg-white p-6 sm:p-8 rounded-xl shadow-lg">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">
-        Add Story
+        Add Category
       </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

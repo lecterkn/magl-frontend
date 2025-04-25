@@ -1,4 +1,4 @@
-import { LogOut, Settings } from "lucide-react";
+import { Book, LogOut, Settings, Tag, Users } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useAuthStore } from "@/store/user";
+import { useAuthStore, useUserStore } from "@/store/user";
 import { useRouter } from "next/navigation";
 import { useMyListStore } from "@/store/mylist";
 
@@ -16,6 +16,7 @@ interface Props {
 }
 export const UserDropdownButton: React.FC<Props> = ({ title }) => {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
   const { setAuth } = useAuthStore();
   const { setMyList } = useMyListStore();
   const onSignout = () => {
@@ -32,6 +33,35 @@ export const UserDropdownButton: React.FC<Props> = ({ title }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>{title}</DropdownMenuLabel>
+        {user && user.role > 0 && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                router.push("/addStory");
+              }}
+            >
+              <Book />
+              Add Story
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push("/addCategory");
+              }}
+            >
+              <Tag />
+              Add Category
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push("/users");
+              }}
+            >
+              <Users />
+              Manage Users
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Settings />

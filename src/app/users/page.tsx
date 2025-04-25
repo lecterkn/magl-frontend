@@ -6,46 +6,7 @@ import { UserCard } from "@/components/users/user_card";
 import { UserList } from "@/components/users/user_list";
 import { UserModel } from "@/model/user";
 import { useAuthStore, useUserStore } from "@/store/user";
-import { User } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const userListExample: UserModel[] = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    roleName: "administrator",
-    role: 2,
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    roleName: "administrator",
-    role: 2,
-  },
-  {
-    id: "3",
-    name: "Peter Jones",
-    email: "peter.jones@example.com",
-    roleName: "moderator",
-    role: 1,
-  },
-  {
-    id: "4",
-    name: "Alice Brown",
-    email: "alice.brown@example.com",
-    roleName: "viewer",
-    role: 0,
-  },
-  {
-    id: "5",
-    name: "Bob Williams",
-    email: "bob.williams@example.com",
-    roleName: "viewer",
-    role: 0,
-  },
-];
 
 const Users = () => {
   const auth = useAuthStore((state) => state.auth);
@@ -81,7 +42,7 @@ const Users = () => {
       {user ? (
         <div className="space-y-4">
           <h1 className="text-xl font-semibold mb-2">Your Profile</h1>
-          <UserCard user={user} canEdit={false} />
+          <UserCard user={user} editUserRole={0} />
           <h1 className="text-xl font-semibold mb-2">Other Users</h1>
           <UserList
             myUser={user}
