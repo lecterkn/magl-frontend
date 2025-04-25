@@ -6,35 +6,16 @@ import { UserCard } from "@/components/users/user_card";
 import { UserList } from "@/components/users/user_list";
 import { UserModel } from "@/model/user";
 import { useAuthStore, useUserStore } from "@/store/user";
+import { useUserListStore } from "@/store/users";
 import { useEffect, useState } from "react";
 
 const Users = () => {
   const auth = useAuthStore((state) => state.auth);
   const user = useUserStore((state) => state.user);
-  const [userList, setUserList] = useState<UserModel[]>([]);
+  const userList = useUserListStore((state) => state.userList);
+  const fetchUsers = useUserListStore((state) => state.fetchUsers);
   useEffect(() => {
-    if (!auth) {
-      return;
-    }
-    const config = new Configuration({
-      basePath: API_HOST_BASEPATH,
-      apiKey: "Bearer " + auth.accessToken,
-    });
-    UserApiFactory(config)
-      .usersGet()
-      .then((response) => {
-        const users: UserModel[] = [];
-        response.data.list.map((user) => {
-          users.push({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            roleName: user.roleName,
-          });
-        });
-        setUserList(users);
-      });
+    fetchUsers();
   }, [auth]);
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

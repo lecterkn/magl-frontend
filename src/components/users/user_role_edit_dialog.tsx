@@ -16,6 +16,7 @@ import { RoleSelector } from "./user_role_selector";
 import { toast } from "sonner";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { Configuration, UserApiFactory } from "@/api";
+import { useUserListStore } from "@/store/users";
 
 interface Props {
   user: UserModel;
@@ -31,6 +32,7 @@ export const UserRoleEditDialog: React.FC<Props> = ({
   setOpen,
 }) => {
   const auth = useAuthStore((state) => state.auth);
+  const fetchUsers = useUserListStore((state) => state.fetchUsers);
   const [value, setValue] = useState<number>(user.role);
   const onSubmit = () => {
     if (!auth) {
@@ -47,6 +49,7 @@ export const UserRoleEditDialog: React.FC<Props> = ({
       })
       .then(() => {
         toast(user.name + "`s has been updated");
+        fetchUsers();
         setOpen(false);
       })
       .catch(() => {
