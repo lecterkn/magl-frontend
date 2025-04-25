@@ -25,9 +25,10 @@ interface Props {
 }
 
 const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
-  const { myList, setMyList } = useMyListStore();
+  const myList = useMyListStore((state) => state.myList);
+  const setMyList = useMyListStore((state) => state.setMyList);
+  const auth = useAuthStore((state) => state.auth);
   const [value, setValue] = useState<number | null>(null);
-  const { auth } = useAuthStore();
   const onSubmit = () => {
     if (!auth) {
       toast("authorization error");

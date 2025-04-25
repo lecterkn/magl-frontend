@@ -32,6 +32,7 @@ const fetchUser = (
         id: response.data.id,
         name: response.data.name,
         role: response.data.role,
+        roleName: response.data.roleName,
       });
     })
     .catch((e) => {
