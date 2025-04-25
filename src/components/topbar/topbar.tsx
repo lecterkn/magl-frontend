@@ -5,7 +5,6 @@ import LoginDialog from "../login/login_dialog";
 import { useAuthStore, useUserStore } from "@/store/user";
 import { Configuration, MylistApiFactory, UserApiFactory } from "@/api";
 import { toast } from "sonner";
-import AdministratorTab from "./topbar_admin_tab";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useRouter } from "next/navigation";
 import { useMyListStore } from "@/store/mylist";
@@ -31,7 +30,9 @@ const fetchUser = (
       setUser({
         id: response.data.id,
         name: response.data.name,
+        email: response.data.email,
         role: response.data.role,
+        roleName: response.data.roleName,
       });
     })
     .catch((e) => {
@@ -39,37 +40,6 @@ const fetchUser = (
         setMyList([]);
         setAuth(null);
       }
-    });
-};
-
-const fetchMyList = (
-  accessToken: string,
-  setMyList: (myList: MyListStoryModel[]) => void,
-) => {
-  const config = new Configuration({
-    basePath: API_HOST_BASEPATH,
-    apiKey: "Bearer " + accessToken,
-  });
-  MylistApiFactory(config)
-    .mylistsGet()
-    .then((response) => {
-      const storyList: MyListStoryModel[] = [];
-      response.data.list.map((item) => {
-        storyList.push({
-          id: item.id,
-          title: item.title,
-          episode: item.episode,
-          description: item.description,
-          imageUrl: item.imageUrl,
-          categoryId: item.categoryId,
-          categoryName: item.categoryName,
-          score: item.score,
-        });
-      });
-      setMyList(storyList);
-    })
-    .catch(() => {
-      toast("failed to load MyList");
     });
 };
 
@@ -81,13 +51,14 @@ function Topbar() {
   const setUser = useUserStore((state) => state.setUser);
   const myList = useMyListStore((state) => state.myList);
   const setMyList = useMyListStore((state) => state.setMyList);
+  const fetchMyList = useMyListStore((state) => state.fetchMyList);
   const router = useRouter();
   useEffect(() => {
     if (!auth) {
       return;
     }
     fetchUser(auth.accessToken, setUser, setAuth, setMyList);
-    fetchMyList(auth.accessToken, setMyList);
+    fetchMyList();
   }, [auth]);
   return (
     <nav className="bg-blue-600 rounded-lg shadow-md p-4 mb-6 text-white">
@@ -109,7 +80,8 @@ function Topbar() {
           />
           {auth && user ? (
             <div className="flex space-x-2">
-              <AdministratorTab role={user?.role} />
+              {/* move to user dropdown button */}
+              {/* <AdministratorTab role={user?.role} /> */}
               <button
                 className="px-4 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-700"
                 onClick={() => {

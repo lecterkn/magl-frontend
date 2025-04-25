@@ -8,31 +8,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { useState } from "react";
-import StarSelector from "./story_add_dialog_score_selector";
-import { Configuration, MylistApiFactory } from "@/api";
-import { API_HOST_BASEPATH } from "@/api/global";
+import { UserModel } from "@/model/user";
 import { useAuthStore } from "@/store/user";
-import { useMyListStore } from "@/store/mylist";
-import { StoryModel } from "@/model/story";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { RoleSelector } from "./user_role_selector";
+import { toast } from "sonner";
+import { API_HOST_BASEPATH } from "@/api/global";
+import { Configuration, UserApiFactory } from "@/api";
+import { useUserListStore } from "@/store/users";
 
 interface Props {
-  story: StoryModel;
+  user: UserModel;
+  editorRole: number;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
 }
 
-const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
-  const fetchMyList = useMyListStore((state) => state.fetchMyList);
+export const UserRoleEditDialog: React.FC<Props> = ({
+  user,
+  editorRole,
+  isOpen,
+  setOpen,
+}) => {
   const auth = useAuthStore((state) => state.auth);
-  const [value, setValue] = useState<number | null>(null);
+  const fetchUsers = useUserListStore((state) => state.fetchUsers);
+  const [value, setValue] = useState<number>(user.role);
   const onSubmit = () => {
-    if (!value) {
-      toast("score is not set!");
-      return;
-    }
     if (!auth) {
       toast("authorization error");
       return;
@@ -41,27 +43,31 @@ const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
       basePath: API_HOST_BASEPATH,
       apiKey: "Bearer " + auth.accessToken,
     });
-    MylistApiFactory(config)
-      .mylistsPost({
-        storyId: story.id,
-        score: value,
+    UserApiFactory(config)
+      .usersUserIdPermissionsPatch(user.id, {
+        permission: value,
       })
       .then(() => {
-        fetchMyList();
+        toast(user.name + "`s has been updated");
+        fetchUsers();
         setOpen(false);
       })
       .catch(() => {
-        toast("failed to add to MyList");
+        toast("failed to update role");
       });
   };
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="bg-gray-100 sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{story.title}</DialogTitle>
-          <DialogDescription>{story.categoryName}</DialogDescription>
+          <DialogTitle>{user.name}</DialogTitle>
+          <DialogDescription>Role: {user.roleName}</DialogDescription>
         </DialogHeader>
-        <StarSelector setValue={setValue} />
+        <RoleSelector
+          myRole={editorRole}
+          currentRole={user.role}
+          setValue={setValue}
+        />
         <DialogFooter>
           <Button
             className="bg-gray-500 hover:bg-gray-600"
@@ -77,5 +83,3 @@ const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
     </Dialog>
   );
 };
-
-export default StoryAddDialog;

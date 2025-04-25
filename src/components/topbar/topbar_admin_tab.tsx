@@ -1,9 +1,9 @@
 interface Props {
-  role: string | undefined;
+  role: number | undefined;
 }
 
 const AdministratorTab: React.FC<Props> = ({ role }) => {
-  if (role == null || role !== "Administrator") {
+  if (role === null || role === 0) {
     return <div />;
   }
   return (

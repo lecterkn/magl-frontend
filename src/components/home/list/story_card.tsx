@@ -10,7 +10,7 @@ interface Props {
 }
 
 const StoryCard: React.FC<Props> = ({ story }) => {
-  const { myList } = useMyListStore();
+  const myList = useMyListStore((state) => state.myList);
   const [isOpenAddDialog, setOpenAddDialog] = useState(false);
 
   return (

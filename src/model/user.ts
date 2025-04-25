@@ -1,7 +1,9 @@
 export interface UserModel {
   id: string;
   name: string;
-  role: string;
+  email: string;
+  role: number;
+  roleName: string;
 }
 
 export interface AuthModel {

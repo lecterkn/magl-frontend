@@ -108,6 +108,19 @@ export interface RequestUserSignupRequest {
 /**
  * 
  * @export
+ * @interface RequestUserUpdatePermissionRequest
+ */
+export interface RequestUserUpdatePermissionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof RequestUserUpdatePermissionRequest
+     */
+    'permission': number;
+}
+/**
+ * 
+ * @export
  * @interface ResponseCategoryListResponse
  */
 export interface ResponseCategoryListResponse {
@@ -325,6 +338,19 @@ export interface ResponseStoryResponse {
 /**
  * 
  * @export
+ * @interface ResponseUserListResponse
+ */
+export interface ResponseUserListResponse {
+    /**
+     * 
+     * @type {Array<ResponseUserResponse>}
+     * @memberof ResponseUserListResponse
+     */
+    'list': Array<ResponseUserResponse>;
+}
+/**
+ * 
+ * @export
  * @interface ResponseUserResponse
  */
 export interface ResponseUserResponse {
@@ -354,10 +380,16 @@ export interface ResponseUserResponse {
     'name': string;
     /**
      * 
+     * @type {number}
+     * @memberof ResponseUserResponse
+     */
+    'role': number;
+    /**
+     * 
      * @type {string}
      * @memberof ResponseUserResponse
      */
-    'role': string;
+    'roleName': string;
     /**
      * 
      * @type {string}
@@ -1435,6 +1467,82 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * ユーザーを一覧取得する
+         * @summary GetUsers
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * ユーザーを一覧取得する
+         * @summary EditPermission
+         * @param {string} userId 編集対象ユーザーID
+         * @param {RequestUserUpdatePermissionRequest} request ユーザーログインリクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersUserIdPermissionsPatch: async (userId: string, request: RequestUserUpdatePermissionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('usersUserIdPermissionsPatch', 'userId', userId)
+            // verify required parameter 'request' is not null or undefined
+            assertParamExists('usersUserIdPermissionsPatch', 'request', request)
+            const localVarPath = `/users/{userId}/permissions`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(request, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1457,6 +1565,32 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserApi.meGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * ユーザーを一覧取得する
+         * @summary GetUsers
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseUserListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.usersGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * ユーザーを一覧取得する
+         * @summary EditPermission
+         * @param {string} userId 編集対象ユーザーID
+         * @param {RequestUserUpdatePermissionRequest} request ユーザーログインリクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersUserIdPermissionsPatch(userId: string, request: RequestUserUpdatePermissionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseUserListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersUserIdPermissionsPatch(userId, request, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.usersUserIdPermissionsPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1475,6 +1609,26 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         meGet(options?: RawAxiosRequestConfig): AxiosPromise<ResponseUserResponse> {
             return localVarFp.meGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * ユーザーを一覧取得する
+         * @summary GetUsers
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersGet(options?: RawAxiosRequestConfig): AxiosPromise<ResponseUserListResponse> {
+            return localVarFp.usersGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * ユーザーを一覧取得する
+         * @summary EditPermission
+         * @param {string} userId 編集対象ユーザーID
+         * @param {RequestUserUpdatePermissionRequest} request ユーザーログインリクエスト
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersUserIdPermissionsPatch(userId: string, request: RequestUserUpdatePermissionRequest, options?: RawAxiosRequestConfig): AxiosPromise<ResponseUserListResponse> {
+            return localVarFp.usersUserIdPermissionsPatch(userId, request, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1495,6 +1649,30 @@ export class UserApi extends BaseAPI {
      */
     public meGet(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).meGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * ユーザーを一覧取得する
+     * @summary GetUsers
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public usersGet(options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).usersGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * ユーザーを一覧取得する
+     * @summary EditPermission
+     * @param {string} userId 編集対象ユーザーID
+     * @param {RequestUserUpdatePermissionRequest} request ユーザーログインリクエスト
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public usersUserIdPermissionsPatch(userId: string, request: RequestUserUpdatePermissionRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).usersUserIdPermissionsPatch(userId, request, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
