@@ -25,8 +25,7 @@ interface Props {
 }
 
 const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
-  const myList = useMyListStore((state) => state.myList);
-  const setMyList = useMyListStore((state) => state.setMyList);
+  const fetchMyList = useMyListStore((state) => state.fetchMyList);
   const auth = useAuthStore((state) => state.auth);
   const [value, setValue] = useState<number | null>(null);
   const onSubmit = () => {
@@ -48,19 +47,7 @@ const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
         score: value,
       })
       .then(() => {
-        setMyList([
-          ...myList,
-          {
-            id: story.id,
-            title: story.title,
-            episode: story.episode,
-            description: story.description,
-            imageUrl: story.imageUrl,
-            categoryId: story.categoryId,
-            categoryName: story.categoryName,
-            score: value,
-          },
-        ]);
+        fetchMyList();
         setOpen(false);
       })
       .catch(() => {
