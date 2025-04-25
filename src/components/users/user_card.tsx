@@ -7,21 +7,31 @@ interface Props {
   editUserRole: number;
 }
 
+const getRoleColor = (role: number) => {
+  if (role === 0) {
+    return "bg-blue-500";
+  }
+  if (role === 1) {
+    return "bg-green-500";
+  }
+  return "bg-red-500";
+};
+
 export const UserCard: React.FC<Props> = ({ user, editUserRole }) => {
   const [isEditDialogOpen, setEditDialogOpen] = useState(false);
   return (
     <>
-      <UserRoleEditDialog
-        user={user}
-        editorRole={editUserRole}
-        isOpen={isEditDialogOpen}
-        setOpen={setEditDialogOpen}
-      />
-      <div className="bg-gray-100 rounded-lg shadow-md p-4 flex items-center justify-between">
+      <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">{user.name}</h3>
-          <p className="text-gray-600">{user.email}</p>
-          <p className="text-gray-600">Role: {user.roleName}</p>
+          <div className="flex items-center space-x-2">
+            <span className="text-xl font-semibold">{user.name}</span>
+            <span
+              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getRoleColor(user.role)} text-white`}
+            >
+              {user.roleName}
+            </span>
+          </div>
+          <p className="text-gray-600 text-md">{user.email}</p>
         </div>
         <div>
           {user.role < editUserRole ? (
@@ -43,6 +53,12 @@ export const UserCard: React.FC<Props> = ({ user, editUserRole }) => {
           )}
         </div>
       </div>
+      <UserRoleEditDialog
+        user={user}
+        editorRole={editUserRole}
+        isOpen={isEditDialogOpen}
+        setOpen={setEditDialogOpen}
+      />
     </>
   );
 };

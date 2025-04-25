@@ -43,37 +43,6 @@ const fetchUser = (
     });
 };
 
-const fetchMyList = (
-  accessToken: string,
-  setMyList: (myList: MyListStoryModel[]) => void,
-) => {
-  const config = new Configuration({
-    basePath: API_HOST_BASEPATH,
-    apiKey: "Bearer " + accessToken,
-  });
-  MylistApiFactory(config)
-    .mylistsGet()
-    .then((response) => {
-      const storyList: MyListStoryModel[] = [];
-      response.data.list.map((item) => {
-        storyList.push({
-          id: item.id,
-          title: item.title,
-          episode: item.episode,
-          description: item.description,
-          imageUrl: item.imageUrl,
-          categoryId: item.categoryId,
-          categoryName: item.categoryName,
-          score: item.score,
-        });
-      });
-      setMyList(storyList);
-    })
-    .catch(() => {
-      toast("failed to load MyList");
-    });
-};
-
 function Topbar() {
   const [isOpenLoginDialog, setOpenLoginDialog] = useState(false);
   const auth = useAuthStore((state) => state.auth);
@@ -82,13 +51,14 @@ function Topbar() {
   const setUser = useUserStore((state) => state.setUser);
   const myList = useMyListStore((state) => state.myList);
   const setMyList = useMyListStore((state) => state.setMyList);
+  const fetchMyList = useMyListStore((state) => state.fetchMyList);
   const router = useRouter();
   useEffect(() => {
     if (!auth) {
       return;
     }
     fetchUser(auth.accessToken, setUser, setAuth, setMyList);
-    fetchMyList(auth.accessToken, setMyList);
+    fetchMyList();
   }, [auth]);
   return (
     <nav className="bg-blue-600 rounded-lg shadow-md p-4 mb-6 text-white">

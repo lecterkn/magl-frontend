@@ -27,7 +27,7 @@ export const StoryRemoveConfirmDialog: React.FC<Props> = ({
 }) => {
   const auth = useAuthStore((state) => state.auth);
   const myList = useMyListStore((state) => state.myList);
-  const setMyList = useMyListStore((state) => state.setMyList);
+  const fetchMyList = useMyListStore((state) => state.fetchMyList);
   const onSubmit = () => {
     if (!auth) {
       toast("authorization error");
@@ -41,7 +41,7 @@ export const StoryRemoveConfirmDialog: React.FC<Props> = ({
       .mylistsStoryIdDelete(story.id)
       .then(() => {
         toast(story.title + " has been removed");
-        setMyList(myList.filter((item) => item.id !== story.id));
+        fetchMyList();
         setOpen(false);
       })
       .catch(() => {

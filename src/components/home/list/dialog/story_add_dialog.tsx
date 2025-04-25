@@ -29,12 +29,12 @@ const StoryAddDialog: React.FC<Props> = ({ story, isOpen, setOpen }) => {
   const auth = useAuthStore((state) => state.auth);
   const [value, setValue] = useState<number | null>(null);
   const onSubmit = () => {
-    if (!auth) {
-      toast("authorization error");
-      return;
-    }
     if (!value) {
       toast("score is not set!");
+      return;
+    }
+    if (!auth) {
+      toast("authorization error");
       return;
     }
     const config = new Configuration({

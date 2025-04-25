@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Topbar from "@/components/topbar/topbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
   subsets: ["latin"],
+  variable: "--font-roboto",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
+  variable: "--font-noto",
 });
 
 const title = "MyAnimeGameList";
@@ -29,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${roboto.variable} ${notoSansJp.variable} antialiased`}>
         <div className="min-h-screen bg-gray-100 p-4 md:p-8">
           <Topbar />
           {children}

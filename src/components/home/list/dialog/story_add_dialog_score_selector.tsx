@@ -42,7 +42,7 @@ const StarSelector: React.FC<StarSelecterProps> = ({ star, setValue }) => {
       <SelectContent>
         {stars.map((star) => (
           <SelectItem key={star.name} value={star.name}>
-            {star.name} ({star.description})
+            {star.name} - {star.description}
           </SelectItem>
         ))}
       </SelectContent>
