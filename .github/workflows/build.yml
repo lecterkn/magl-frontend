@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  # push:
+  #   paths:
+  #     - '**.ts'
+  #     - '**.tsx'
+  #     - 'package.json'
+  #     - 'yarn.lock'
+  #     - 'pnpm-lock.yaml'
+  #     - 'package-lock.json'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+        
+      - name: setup bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: install dependencies
+        run: bun install
+
+      - name: build
+        run: bun run build
