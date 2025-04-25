@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import LoginDialog from "../login/login_dialog";
 import { useAuthStore, useUserStore } from "@/store/user";
-import { Configuration, MylistApiFactory, UserApiFactory } from "@/api";
-import { toast } from "sonner";
+import { Configuration, UserApiFactory } from "@/api";
 import { API_HOST_BASEPATH } from "@/api/global";
 import { useRouter } from "next/navigation";
 import { useMyListStore } from "@/store/mylist";

@@ -26,7 +26,6 @@ export const StoryRemoveConfirmDialog: React.FC<Props> = ({
   story,
 }) => {
   const auth = useAuthStore((state) => state.auth);
-  const myList = useMyListStore((state) => state.myList);
   const fetchMyList = useMyListStore((state) => state.fetchMyList);
   const onSubmit = () => {
     if (!auth) {
